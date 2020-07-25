@@ -16,6 +16,8 @@ if (shipping == "False" && user != "AnonymousUser") {
 
 // after name/shipping info added, hide continue button and show payment form
 var form = document.getElementById("form");
+// get csrf token
+//csrftoken = form.getElementsByTagName("input")[0].value;
 
 form.addEventListener("submit", (e) => {
   // don't submit initial data
@@ -58,7 +60,7 @@ function submitFormData() {
     userFormData.email = form.email.value;
   }
 
-  // send post request with data of order to be submitted
+  // send post request with data of order to view function to be submitted
   var url = "/process_order/";
 
   fetch(url, {

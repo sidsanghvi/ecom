@@ -95,7 +95,7 @@ class ShippingAddress(models.Model):
     # 1 address belongs to 1 customer, 1 customer can have many address'
     customer = models.ForeignKey(
         Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    # relationship unclear - 1 address has 1 order, 1 order has many address'?
+    # relationship unclear - 1 address per 1 order, 1 order can be sent to many address'?
     order = models.ForeignKey(
         Order, on_delete=models.SET_NULL, null=True, blank=True)
     address = models.CharField(max_length=240, blank=True)
