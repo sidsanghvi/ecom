@@ -38,9 +38,40 @@ def cart(request):
         # query all order items in above order
         items = order.orderitem_set.all()
     else:
+        # query cart cookie
+        # convert cart cookie from string to dict.
+        try:
+            cart = json.loads(request.COOKIES['cart'])
+        # if cart undefined, create cart.
+        except:
+            cart = {}
+        # set empty variable for order
         items = []
         order = {'get_cart_total': 0,
                  'get_cart_quantity': 0, 'shipping': False}
+        # add order values from cookie to above variable
+        for key in cart:
+            # update cart total items
+            order['get_cart_quantity'] += cart[key]['quantity']
+            # update cart total price
+            product = Product.objects.get(id=key)
+            order['get_cart_total'] += product.price * cart[key]['quantity']
+            # update shipping needed or not
+            if product.digital == False:
+                order['shipping'] = True
+            # create item object
+            item = {
+                'product': {
+                    'id': product.id,
+                    'name': product.name,
+                    'price': product.price,
+                    'imageURL': product.imageURL
+                },
+                'quantity': cart[key]['quantity'],
+                'get_total': product.price * cart[key]['quantity'],
+            }
+            # add item object to items array, to query from cart.html
+            items.append(item)
 
     context = {'items': items, 'order': order}
     return render(request, 'store/cart.html', context)
@@ -113,10 +144,9 @@ def processOrder(request):
 
         # security measure. Compare original total price with total sent to server from client
 
-        if total == order.get_cart_total:
+        if total == float(order.get_cart_total):
             order.complete = True
 
-        print(total, order.get_cart_total)
         order.save()
         # create shipping adress object for order
         if order.shipping == True:

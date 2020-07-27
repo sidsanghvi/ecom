@@ -9,12 +9,36 @@ for (var i = 0; i < updateButtons.length; i++) {
 
     //check is user is logged in or anon
 
-    if (user === "AnonymousUser") {
-      console.log("User not logged in");
+    if (user == "AnonymousUser") {
+      addCookieItem(productID, action);
     } else {
       updateUserOrder(productID, action);
     }
   });
+}
+
+// update guest user's cart data
+
+function addCookieItem(productID, action) {
+  // logic if product is added
+  if (action == "add") {
+    if (cart[productID] == undefined) {
+      cart[productID] = { quantity: 1 };
+    } else {
+      cart[productID]["quantity"] += 1;
+    }
+  }
+
+  if (action == "remove") {
+    cart[productID]["quantity"] -= 1;
+
+    if (cart[productID]["quantity"] <= 0) {
+      delete cart[productID];
+    }
+  }
+  console.log("Cart: ", cart);
+  document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
+  location.reload();
 }
 
 //update Logged in user's cart data
