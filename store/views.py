@@ -6,61 +6,39 @@ import datetime
 # Create your views here.
 
 from .models import *
-from .utils import cookieCart
+from .utils import cartData
 
 
 def store(request):
     # query all products
     products = Product.objects.all()
 
-    # to dynaimcally render order info of logged in user
-    if request.user.is_authenticated:
-        # query customer instance associated with user
-        customer = request.user.customer
-        # query/create+query an order for above customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-    else:
-        cookie_data = cookieCart(request)
-        order = cookie_data['order']
+    # to dynaimcally render order info of logged in/guest user
+    data = cartData(request)
+
+    order = data['order']
 
     context = {'products': products, 'order': order}
     return render(request, 'store/store.html', context)
 
 
 def cart(request):
-    # to dynaimcally render order info of logged in user
-    if request.user.is_authenticated:
-        # query customer instance associated with user
-        customer = request.user.customer
-        # query/create+query an order for above customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        # query all order items in above order
-        items = order.orderitem_set.all()
-    else:
-        cookie_data = cookieCart(request)
-        order = cookie_data['order']
-        items = cookie_data['items']
+    # to dynaimcally render order info of logged in/guest user
+    data = cartData(request)
+
+    order = data['order']
+    items = data['items']
 
     context = {'items': items, 'order': order}
     return render(request, 'store/cart.html', context)
 
 
 def checkout(request):
-    # to dynaimcally render order info of logged in user
-    if request.user.is_authenticated:
-        # query customer instance associated with user
-        customer = request.user.customer
-        # query/create+query an order for above customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        # query all order items in above order
-        items = order.orderitem_set.all()
-    else:
-        cookie_data = cookieCart(request)
-        order = cookie_data['order']
-        items = cookie_data['items']
+    # to dynaimcally render order info of logged in/guest user
+    data = cartData(request)
+
+    order = data['order']
+    items = data['items']
 
     context = {'items': items, 'order': order}
     return render(request, 'store/checkout.html', context)
