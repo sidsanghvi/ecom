@@ -14,10 +14,12 @@ if (shipping == "False" && user != "AnonymousUser") {
   document.getElementById("payment-info").classList.remove("hidden");
 }
 
+// Try this is encountering csrf issues
+// get csrf token
+// csrftoken = form.getElementsByTagName("input")[0].value;
+
 // after name/shipping info added, hide continue button and show payment form
 var form = document.getElementById("form");
-// get csrf token
-//csrftoken = form.getElementsByTagName("input")[0].value;
 
 form.addEventListener("submit", (e) => {
   // don't submit initial data
@@ -33,7 +35,6 @@ document.getElementById("make-payment").addEventListener("click", (e) => {
 });
 
 function submitFormData() {
-  console.log("Payment Submited");
   // create two json objects to store form data
   var userFormData = {
     user: null,
@@ -70,11 +71,9 @@ function submitFormData() {
       "X-CSRFToken": csrftoken,
     },
     body: JSON.stringify({ form: userFormData, shipping: shippingInfo }),
-  }) // extracts json data from response
-    .then((response) => response.json())
-    // output data on log and redirect to homepage
-    .then((data) => {
-      console.log("Success: ", data);
+  })
+    // reset cookies and redirect to homepage
+    .then(() => {
       alert("Transaction Complete");
 
       // reset browser cookies

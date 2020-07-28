@@ -62,3 +62,6 @@ def cartData(request):
         order = cookie_data['order']
         items = cookie_data['items']
     return {'order': order, 'items': items}
+
+
+def guestCheckout(request, data):
