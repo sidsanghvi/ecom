@@ -65,3 +65,36 @@ def cartData(request):
 
 
 def guestCheckout(request, data):
+    # initialise name and email from data sent from js
+    name = data['form']['name']
+    email = data['form']['email']
+
+    # initialse cart data from cookie
+    cookieData = cookieCart(request)
+    items = cookieData['items']
+    order = cookieData['order']
+
+    # query/create+query customer with associated email
+    customer, created = Customer.objects.get_or_create(email=email)
+    # add given name to associated customer object
+    # we set name outside get_or_create to avoid duplicate data of customer with diff names but same email
+    customer.name = name
+    customer.save()
+
+    # create order object with assoociated customer
+    order = Order.objects.create(
+        customer=customer,
+        complete=False
+    )
+
+    # create order items for order
+    for item in items:
+        product = Product.objects.get(id=item['product']['id'])
+
+        orderItem = OrderItem.objects.create(
+            product=product,
+            order=order,
+            quantity=item['quantity']
+        )
+
+    return customer, order
