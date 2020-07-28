@@ -76,10 +76,11 @@ function submitFormData() {
     .then((data) => {
       console.log("Success: ", data);
       alert("Transaction Complete");
+
+      // reset browser cookies
       cart = {};
       document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
-      console.log("cart reset! cart now: ", cart);
 
-      //window.location.href = "redirect";
+      window.location.href = "redirect";
     });
 }
