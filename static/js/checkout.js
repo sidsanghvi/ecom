@@ -29,10 +29,7 @@ form.addEventListener("submit", (e) => {
   document.getElementById("payment-info").classList.remove("hidden");
 });
 
-// submit form when 'confirm purchase' clicked
-document.getElementById("make-payment").addEventListener("click", (e) => {
-  submitFormData();
-});
+// submit form when paypal process is done. Logic in checkout.html
 
 function submitFormData() {
   // create two json objects to store form data
