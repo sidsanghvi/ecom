@@ -10,6 +10,8 @@ autopep8 = "*"
 [packages]
 django = "*"
 pillow = "*"
+gunicorn = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.8"
